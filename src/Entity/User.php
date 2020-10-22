@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User implements  UserInterface 
+class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -54,6 +54,8 @@ class User implements  UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $username;
+
+    private $plainPassword;
 
     /**
      * @ORM\OneToMany(targetEntity=Intervention::class, mappedBy="user")
@@ -129,6 +131,22 @@ class User implements  UserInterface
         $this->present = $present;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param mixed $plainPassword
+     */
+    public function setPlainPassword($plainPassword): void
+    {
+        $this->plainPassword = $plainPassword;
     }
 
     public function getSalt()
