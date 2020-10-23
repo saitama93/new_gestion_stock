@@ -52,7 +52,7 @@ class AdminArchiveController extends AbstractController
 
             $this->addFlash(
                 'danger',
-                "Le compte de {$user->getLastName()} {$user->getFirstName()} est définitivement supprimé."
+                "Le compte de {$user->getFullName()} est définitivement supprimé."
             );
 
             return $this->redirectToRoute('AdminArchive.users');
@@ -81,7 +81,7 @@ class AdminArchiveController extends AbstractController
 
         $this->addFlash(
             'success',
-            "Le compte de {$user->getLastName()} {$user->getFirstName()} est activé."
+            "Le compte de {$user->getFullName()} est activé."
         );
 
         return $this->redirectToRoute('AdminUser.index');

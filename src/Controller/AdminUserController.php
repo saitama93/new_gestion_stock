@@ -54,7 +54,7 @@ class AdminUserController extends AbstractController
             $em->flush();
             $this->addFlash(
                 'success',
-                'Compte créé et un mail vous a été envoyé avec vos identifiants'
+                "Compte de {$user->getFullName()} créé et un mail vous a été envoyé avec vos identifiants"
             );
 
             return $this->redirectToRoute('AdminUser.index');
@@ -109,7 +109,7 @@ class AdminUserController extends AbstractController
                 $em->flush();
                 $this->addFlash(
                     'success',
-                    "Informations du compte de {$user->getLastName()} {$user->getFirstName()} modifiées."
+                    "Informations du compte de {$user->getFullName()} modifiées."
                 );
 
                 //Création et envoie de mail    
@@ -156,7 +156,7 @@ class AdminUserController extends AbstractController
 
             $this->addFlash(
                 'danger',
-                "Le compte de {$user->getLastName()} {$user->getFirstName()} a bien été désactivé."
+                "Le compte de {$user->getFullName()} a bien été désactivé."
             );
 
             return $this->redirectToRoute('AdminUser.index');
