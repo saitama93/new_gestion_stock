@@ -7,9 +7,15 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ *  @UniqueEntity(
+ * fields={"email"},
+ * message="Un autre utilisateur s'est déjà inscrit avec cette adresse mail, merci de la modifier !"
+ * )
  */
 class User implements UserInterface
 {
@@ -20,23 +26,44 @@ class User implements UserInterface
      */
     private $id;
 
-    /**
+  /**
+     * @var string
+     * @Assert\Regex(
+     *     pattern="/[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/",
+     *     message="Ne doit pas contenir de chiffre ou de charactères spéciaux"
+     * )
      * @ORM\Column(type="string", length=255)
      */
     private $firstName;
 
-    /**
+      /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\Regex(
+     *     pattern="/[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/",
+     *     message="Ne doit pas contenir de chiffre ou de charactères spéciaux"
+     * )
      */
     private $lastName;
 
     /**
+     * @var string|null
+     * @Assert\Regex(
+     *     pattern="/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/",
+     *     message="Doit contenir un chiffre, une lettre, un charactères spéciaux et doit avoir faire une taille de 8"
+     * )
      * @ORM\Column(type="string", length=255)
      */
     private $password;
 
-    /**
+      /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(
+     *     message = "'{{ value }}' n'est pas un email correct."
+     * )
      */
     private $email;
 
@@ -131,6 +158,16 @@ class User implements UserInterface
         $this->present = $present;
 
         return $this;
+    }
+
+     /**
+     * Affiche le nom complet
+     *
+     * @return void
+     */
+    public function getFullName()
+    {
+        return "{$this->firstName} " . strtoupper("{$this->lastName}");
     }
 
     /**

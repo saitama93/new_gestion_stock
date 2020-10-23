@@ -66,6 +66,80 @@ class AdminUserController extends AbstractController
     }
 
     /**
+     * Permet de modifier les utilisateurs
+     * 
+     * @Route("admin/user/edit/{id}",name="AdminUser.edit",methods={"GET","POST"})
+     * 
+     */
+    public function edit(Request $request, $id, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $em, UserRepository $userRepo)
+    {
+        $user = $userRepo->find($id);
+        $check = '';
+        $form =  $this->createForm(RegistrationType::class, $user);
+        $plainPasswd = $user->getPassword();
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $plainPasswd = $user->getPassword();
+                $user->setPlainPassword($plainPasswd);
+                $password = $passwordEncoder->encodePassword($user, $plainPasswd);
+                $user->setPassword($password);
+
+                // if ($user->getId() != 1 && $user->getId() != 2) {
+                //     switch ($_POST['roles']) {
+                //         case 0:
+                //             $user->setRoles(array());
+                //             break;
+                //         case 1:
+                //             $user->setRoles(array('ROLE_ADMIN'));
+                //             break;
+                //         case 2:
+                //             $user->setRoles(array('ROLE_PUBLIC'));
+                //             break;
+                //         default:
+                //             $user->setRoles(array());
+                //             break;
+                //     }
+                // }
+
+                $user->setPresent(1);
+                $em->persist($user);
+                $em->flush();
+                $this->addFlash(
+                    'success',
+                    "Informations du compte de {$user->getLastName()} {$user->getFirstName()} modifiées."
+                );
+
+                //Création et envoie de mail    
+
+                // sendMail prend en parametres:
+                // Le message du mail
+                // L'expéditeur du mail
+                // Le destinataire du mail
+                // L'objet du mail
+                // Le nom de l'expéditeur
+                // $mailerService->sendMail(
+                //     'Voici vos informations utilisateurs afin d\'accéder à l\'application',
+                //     'rononoa.zoro@mugiwara.fr',
+                //     'igal.ilmiamir@doubs.fr',
+                //     'Création de compte',
+                //     'Zoro'
+                // );
+
+                return $this->redirectToRoute('AdminUser.index');
+            }
+        }
+        return $this->render('admin/user/edit.html.twig', [
+            'id' => $id,
+            'user' => $user,
+            'check' => $check,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
      * Permet de supprimer un utilisateur avec page de confirmation
      * 
      * @Route("admin/user/delete/{id}",name="AdminUser.delete",methods={"GET","POST"})

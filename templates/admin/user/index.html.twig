@@ -47,11 +47,10 @@
 							<td>{{ user.id }}</td>
 							<td>{{ user.username }}</td>
 							<td>{{ user.email }}</td>
-							<td>{{ user.lastName | upper }}
-								{{ user.firstName }}</td>
+							<td>{{ user.fullName}}</td>
 
 							<td class="text-center">
-								<a title="Modifier les informations" href="#" class="btn btn-primary mr-2">
+								<a title="Modifier les informations" href="{{ path('AdminUser.edit', {'id' : user.id}) }}" class="btn btn-primary mr-2">
 									<i class="fas fa-edit"></i>
 								</a>
 								{% if present == true %}
