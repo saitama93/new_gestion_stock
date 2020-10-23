@@ -89,10 +89,16 @@ class User implements UserInterface
      */
     private $interventions;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Role::class, mappedBy="users")
+     */
+    private $userRoles;
+
     public function __construct()
     {
         $this->equipment = new ArrayCollection();
         $this->interventions = new ArrayCollection();
+        $this->userRoles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,7 +202,22 @@ class User implements UserInterface
 
     public function getRoles()
     {
+        $roles = $this->userRoles->toArray();
+        dump($roles);
+
+        $roles = $this->userRoles->map(function($role){
+            return $role->getTitle();
+        });
+       
+        if($this->getUserRoles() != 'ROLE_PUBLIC'){
+            $roles[] = "ROLE_USER";
+        }
+
+        dump($roles);
+        die();
+
         return ['ROLE_USER'];
+
     }
 
     /**
@@ -268,6 +289,34 @@ class User implements UserInterface
             if ($intervention->getUser() === $this) {
                 $intervention->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Role[]
+     */
+    public function getUserRoles(): Collection
+    {
+        return $this->userRoles;
+    }
+
+    public function addUserRole(Role $userRole): self
+    {
+        if (!$this->userRoles->contains($userRole)) {
+            $this->userRoles[] = $userRole;
+            $userRole->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRole(Role $userRole): self
+    {
+        if ($this->userRoles->contains($userRole)) {
+            $this->userRoles->removeElement($userRole);
+            $userRole->removeUser($this);
         }
 
         return $this;

@@ -2,15 +2,15 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Equipment;
-use App\Entity\Location;
-use App\Entity\Status;
 use Faker\Factory;
+use App\Entity\Role;
 use App\Entity\User;
+use App\Entity\Status;
+use App\Entity\Location;
+use App\Entity\Equipment;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Validator\Constraints\Length;
 
 class AppFixtures extends Fixture
 {
@@ -28,6 +28,39 @@ class AppFixtures extends Fixture
         $faker = Factory::create('fr_FR');
         $users = [];
         $genres = ['male', 'female'];
+
+        $adminRole = new Role();
+
+        $adminRole->setTitle('ROLE_ADMIN');
+        $manager->persist($adminRole);
+
+        $admin = new User();
+
+        $admin->setFirstName("Igal")
+        ->setLastName("ILMI AMIR")
+        ->setEmail("igal@stock.fr")
+        ->setPassword($this->encoder->encodePassword($admin, "password123!"))
+        ->setPresent(1)
+        ->setUsername("Igal")
+        ->addUserRole($adminRole);
+        $manager->persist($admin);
+
+        $publicRole = new Role();
+        $publicRole->setTitle("ROLE_PUBLIC");
+        $manager->persist($publicRole);
+
+        $public = new User();
+
+        $public->setFirstName("Public")
+        ->setLastName("PUBLIC")
+        ->setEmail("public@stock.fr")
+        ->setPassword($this->encoder->encodePassword($public, "password123!"))
+        ->setPresent(1)
+        ->setUsername("Publique")
+        ->addUserRole($publicRole);
+
+        $manager->persist($public);
+
         $statutes[] = [
             'SAV',
             'En stock',
