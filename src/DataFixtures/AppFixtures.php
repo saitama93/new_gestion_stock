@@ -133,7 +133,7 @@ class AppFixtures extends Fixture
         for ($z = 1; $z <= 50; $z++) {
             $user = new User();
             $genre = $faker->randomElement($genres);
-            $hash = $this->encoder->encodePassword($user, 'password');
+            $hash = $this->encoder->encodePassword($user, 'password123!');
 
             $user->setFirstName($faker->firstName($genre))
                 ->setLastName($faker->lastName)
