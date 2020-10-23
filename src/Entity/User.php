@@ -26,7 +26,7 @@ class User implements UserInterface
      */
     private $id;
 
-  /**
+    /**
      * @var string
      * @Assert\Regex(
      *     pattern="/[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/",
@@ -36,7 +36,7 @@ class User implements UserInterface
      */
     private $firstName;
 
-      /**
+    /**
      * @var string
      *
      * @ORM\Column(type="string", length=255)
@@ -57,7 +57,7 @@ class User implements UserInterface
      */
     private $password;
 
-      /**
+    /**
      * @var string
      *
      * @ORM\Column(type="string", length=255)
@@ -160,7 +160,7 @@ class User implements UserInterface
         return $this;
     }
 
-     /**
+    /**
      * Affiche le nom complet
      *
      * @return void
@@ -196,16 +196,8 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        $roles = $this->userRoles->map(function ($role) {
-
-            return $role->getTitle();
-        })->toArray();
-
-        $roles[] = 'ROLE_USER';
-
-        return $roles;
+        return ['ROLE_USER'];
     }
-
 
     /**
      * @return Collection|Equipment[]

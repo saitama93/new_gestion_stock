@@ -2,16 +2,21 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\User;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminAccountController extends AbstractController
 {
-    /**
-     * @Route("/admin/account", name="AdminAccount.index")
+     /**
+     * Permet de visualiser le profil de l'utilisateur connecté
+     * 
+     * @Route("/account/my_account/{id}", name="Account.myAccount")
      */
-    public function index()
+    public function myAccount(User $user)
     {
-        return $this->render('admin/account/index.html.twig');
+        return $this->render('admin/account/index.html.twig', [
+            'user' => $user
+        ]);
     }
 }
