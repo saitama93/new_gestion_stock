@@ -55,17 +55,17 @@
 									<i class="fas fa-edit"></i>
 								</a>
 								{% if present == true %}
-									<a href="#" class="btn btn-danger ml-2" title="Bloquer le compte">
+									<a href="{{ path('AdminUser.delete', {'id' : user.id}) }}" class="btn btn-danger ml-2" title="Bloquer le compte">
 										<i class="fas fa-user-lock"></i>
 									</a>
 								{% else %}
 
-									<a href="#" class="btn btn-danger ml-2" title="Supprimer le compte">
+									<a href="{{ path('AdminArchive.userDelete', {'id' : user.id}) }}" class="btn btn-danger ml-2" title="Supprimer le compte">
 										<i class="fas fa-trash"></i>
 									</a>
 								{% endif %}
 								{% if present == false %}
-									<a href="#" title="Activer le compte" class="btn btn-success ml-2">
+									<a href="{{ path('AdminArchive.activateAccount', {'id' : user.id}) }}" title="Activer le compte" class="btn btn-success ml-2">
 										<i class="fas fa-unlock"></i>
 									</a>
 								{% endif %}

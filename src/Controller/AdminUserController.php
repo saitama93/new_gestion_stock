@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationType;
+use App\Repository\UserRepository;
 use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,5 +63,36 @@ class AdminUserController extends AbstractController
         return $this->render('admin/user/add.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * Permet de supprimer un utilisateur avec page de confirmation
+     * 
+     * @Route("admin/user/delete/{id}",name="AdminUser.delete",methods={"GET","POST"})
+     */
+    public function archive(Request $request, $id, UserRepository $userRepo, EntityManagerInterface $em)
+    {
+
+        $user = $userRepo->find($id);
+
+        if ($request->isMethod('POST')) {
+            $user->setPresent(0);
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash(
+                'danger',
+                "Le compte de {$user->getLastName()} {$user->getFirstName()} a bien été désactivé."
+            );
+
+            return $this->redirectToRoute('AdminUser.index');
+        }
+        return $this->render(
+            'admin/user/confirmDelete.html.twig',
+            [
+                'user' => $user,
+                'present' => true
+            ]
+        );
     }
 }
